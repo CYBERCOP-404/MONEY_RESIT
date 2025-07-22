@@ -1,74 +1,185 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
   <meta charset="UTF-8" />
-  <title>Payment Receipt Form</title>
+  <title>বহু পণ্যের বিক্রয় রশিদ</title>
   <style>
     body {
-      font-family: Arial;
+      font-family: Arial, sans-serif;
       background-color: #f2f9ff;
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 20px;
     }
     h2 {
       color: #009688;
     }
     form {
-      background: #ffffff;
+      background: #fff;
       padding: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
       border-radius: 10px;
-      max-width: 400px;
-      width: 90%;
+      max-width: 600px;
+      width: 95%;
     }
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
+    input {
+      padding: 8px;
+      margin-top: 6px;
       border-radius: 6px;
       border: 1px solid #ccc;
+      font-size: 15px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    .products {
+      margin-top: 15px;
+      border: 1px solid #0288d1;
+      border-radius: 8px;
+      padding: 10px;
+      background: #e3f2fd;
+    }
+    .product-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .product-row > input {
+      flex: 1;
+    }
+    .product-row button {
+      background: #e53935;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 30px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .add-product-btn {
+      margin-top: 10px;
+      background: #0288d1;
+      border: none;
+      color: white;
+      padding: 10px;
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button[type="submit"] {
+      margin-top: 20px;
+      background: #009688;
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 18px;
     }
     .receipt {
       display: none;
-      margin-top: 20px;
-      padding: 15px;
+      margin-top: 25px;
+      max-width: 600px;
+      width: 95%;
       background-color: #e1f5fe;
       border: 2px dashed #0288d1;
       border-radius: 10px;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+    .receipt table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .receipt th, .receipt td {
+      border: 1px solid #0288d1;
+      padding: 8px;
+      text-align: center;
     }
     .download-btn {
-      margin-top: 10px;
+      margin-top: 15px;
       background-color: #4caf50;
       color: white;
       border: none;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      width: 100%;
+    }
+    .download-btn:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
-  <h2>🧾 Payment Receipt Form</h2>
+  <h2>🧾 বহু পণ্যের বিক্রয় রশিদ ফর্ম</h2>
   <form id="paymentForm">
-    <input type="text" id="name" placeholder="Full Name" required />
-    <input type="text" id="number" placeholder="Mobile Number" required />
-    <input type="text" id="amount" placeholder="Amount (BDT)" required />
-    <button type="submit">Submit</button>
+    <label>ক্রেতার নাম</label>
+    <input type="text" id="name" placeholder="পূর্ণ নাম" required />
+    <label>মোবাইল নম্বর</label>
+    <input type="text" id="number" placeholder="মোবাইল নম্বর" required />
+
+    <div class="products" id="productsList">
+      <label>পণ্যসমূহ</label>
+      <div class="product-row">
+        <input type="text" placeholder="পণ্যের নাম" class="product-name" required />
+        <input type="number" min="1" value="1" class="product-qty" placeholder="পরিমাণ" required />
+        <input type="number" min="0" step="0.01" value="0" class="product-price" placeholder="প্রতি এককের দাম (BDT)" required />
+        <button type="button" class="remove-btn" title="পণ্য মুছে ফেলুন">×</button>
+      </div>
+    </div>
+    <button type="button" class="add-product-btn" id="addProductBtn">নতুন পণ্য যোগ করুন +</button>
+
+    <label>মোট মূল্য (BDT)</label>
+    <input type="text" id="total" readonly style="background:#ddd;" />
+
+    <button type="submit">সাবমিট করুন</button>
   </form>
 
   <div class="receipt" id="receipt">
-    <h3>✅ Payment Receipt</h3>
-    <p><strong>Name:</strong> <span id="rName"></span></p>
-    <p><strong>Number:</strong> <span id="rNumber"></span></p>
-    <p><strong>Amount:</strong> <span id="rAmount"></span> BDT</p>
-    <p><strong>Date:</strong> <span id="rDate"></span></p>
-    <button class="download-btn" onclick="downloadReceipt()">Download Receipt</button>
+    <h3>✅ পেমেন্ট রশিদ</h3>
+    <p><strong>ক্রেতার নাম:</strong> <span id="rName"></span></p>
+    <p><strong>মোবাইল নম্বর:</strong> <span id="rNumber"></span></p>
+    <p><strong>পণ্যসমূহ:</strong></p>
+    <table>
+      <thead>
+        <tr>
+          <th>পণ্যের নাম</th>
+          <th>পরিমাণ</th>
+          <th>প্রতি এককের দাম (BDT)</th>
+          <th>মোট (BDT)</th>
+        </tr>
+      </thead>
+      <tbody id="rProductsTableBody"></tbody>
+      <tfoot>
+        <tr>
+          <th colspan="3" style="text-align:right;">সর্বমোট</th>
+          <th id="rTotal"></th>
+        </tr>
+      </tfoot>
+    </table>
+    <p><strong>তারিখ ও সময়:</strong> <span id="rDate"></span></p>
+    <button class="download-btn" onclick="downloadReceipt()">রশিদ ডাউনলোড করুন</button>
   </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <script>
-    // ✅ Firebase Config (আপনারটি এখানে বসান)
+    // আপনার Firebase config এখানে বসান
     const firebaseConfig = {
       apiKey: "YOUR_FIREBASE_API_KEY",
       authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -78,49 +189,139 @@
       messagingSenderId: "SENDER_ID",
       appId: "APP_ID"
     };
-
-    // 🔗 Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+
+    const productsList = document.getElementById('productsList');
+    const addProductBtn = document.getElementById('addProductBtn');
+    const totalInput = document.getElementById('total');
+
+    // নতুন পণ্যের সারি যোগ করার ফাংশন
+    function addProductRow() {
+      const div = document.createElement('div');
+      div.className = 'product-row';
+      div.innerHTML = `
+        <input type="text" placeholder="পণ্যের নাম" class="product-name" required />
+        <input type="number" min="1" value="1" class="product-qty" placeholder="পরিমাণ" required />
+        <input type="number" min="0" step="0.01" value="0" class="product-price" placeholder="প্রতি এককের দাম (BDT)" required />
+        <button type="button" class="remove-btn" title="পণ্য মুছে ফেলুন">×</button>
+      `;
+      productsList.appendChild(div);
+
+      // মুছে ফেলার বাটনে ক্লিক ইভেন্ট
+      div.querySelector('.remove-btn').addEventListener('click', () => {
+        div.remove();
+        calculateTotal();
+      });
+
+      // নতুন ইনপুটগুলোর উপর ইভেন্ট যুক্ত করা
+      div.querySelector('.product-qty').addEventListener('input', calculateTotal);
+      div.querySelector('.product-price').addEventListener('input', calculateTotal);
+    }
+
+    // প্রথম পণ্য সারিতে মুছে ফেলা বাটন যুক্ত করা
+    productsList.querySelectorAll('.remove-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.target.parentElement.remove();
+        calculateTotal();
+      });
+    });
+
+    // পণ্য পরিমাণ বা দাম পরিবর্তনে মোট মূল্য গণনা
+    function calculateTotal() {
+      let total = 0;
+      const productRows = document.querySelectorAll('.product-row');
+      productRows.forEach(row => {
+        const qty = parseFloat(row.querySelector('.product-qty').value) || 0;
+        const price = parseFloat(row.querySelector('.product-price').value) || 0;
+        total += qty * price;
+      });
+      totalInput.value = total.toFixed(2);
+    }
+
+    addProductBtn.addEventListener('click', () => {
+      addProductRow();
+    });
+
+    // ইনপুটে পরিবর্তন হলে মোট হিসাব আপডেট
+    productsList.addEventListener('input', (e) => {
+      if (e.target.classList.contains('product-qty') || e.target.classList.contains('product-price')) {
+        calculateTotal();
+      }
+    });
+
+    calculateTotal();
 
     const form = document.getElementById('paymentForm');
     const receipt = document.getElementById('receipt');
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', e => {
       e.preventDefault();
-      const name = document.getElementById('name').value;
-      const number = document.getElementById('number').value;
-      const amount = document.getElementById('amount').value;
+
+      const name = document.getElementById('name').value.trim();
+      const number = document.getElementById('number').value.trim();
+
+      // পণ্যসমূহ নিয়ে আসা
+      const products = [];
+      const productRows = document.querySelectorAll('.product-row');
+      for (const row of productRows) {
+        const pname = row.querySelector('.product-name').value.trim();
+        const qty = parseInt(row.querySelector('.product-qty').value) || 0;
+        const price = parseFloat(row.querySelector('.product-price').value) || 0;
+        if (pname && qty > 0 && price >= 0) {
+          products.push({ pname, qty, price, subtotal: (qty * price).toFixed(2) });
+        }
+      }
+
+      if (products.length === 0) {
+        alert('কমপক্ষে একটি পণ্য যুক্ত করুন।');
+        return;
+      }
+
+      const total = products.reduce((acc, p) => acc + parseFloat(p.subtotal), 0).toFixed(2);
       const date = new Date().toLocaleString();
 
-      // 📝 Save to Firebase
-      const newRef = database.ref('payments').push();
-      newRef.set({ name, number, amount, date });
+      // Firebase এ ডাটা পাঠানো
+      const newRef = database.ref('storeSales').push();
+      newRef.set({ name, number, products, total, date });
 
-      // 🎟️ Show Receipt
+      // রশিদ দেখানো
       document.getElementById('rName').innerText = name;
       document.getElementById('rNumber').innerText = number;
-      document.getElementById('rAmount').innerText = amount;
-      document.getElementById('rDate').innerText = date;
-      receipt.style.display = 'block';
 
+      const tbody = document.getElementById('rProductsTableBody');
+      tbody.innerHTML = '';
+      products.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.pname}</td>
+          <td>${p.qty}</td>
+          <td>${parseFloat(p.price).toFixed(2)}</td>
+          <td>${p.subtotal}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('rTotal').innerText = total;
+      document.getElementById('rDate').innerText = date;
+
+      receipt.style.display = 'block';
       form.reset();
+      // প্রথম পণ্যের সারি একবার তৈরি রাখি
+      productsList.innerHTML = '';
+      addProductRow();
+      calculateTotal();
     });
 
-    // 📥 Download Receipt as Image
+    // রশিদ ডাউনলোড
     function downloadReceipt() {
       html2canvas(document.querySelector("#receipt")).then(canvas => {
         const link = document.createElement("a");
-        link.download = "payment_receipt.png";
+        link.download = "sales_receipt.png";
         link.href = canvas.toDataURL();
         link.click();
       });
     }
   </script>
-
-  <!-- 📸 HTML2Canvas for image download -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
-</html>  
-
-here is my code.. can i update this code. 
+</html>
