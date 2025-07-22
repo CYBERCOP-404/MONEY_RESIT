@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Payment Receipt Form</title>
+  <style>
+    body {
+      font-family: Arial;
+      background-color: #f2f9ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h2 {
+      color: #009688;
+    }
+    form {
+      background: #ffffff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border-radius: 10px;
+      max-width: 400px;
+      width: 90%;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .receipt {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e1f5fe;
+      border: 2px dashed #0288d1;
+      border-radius: 10px;
+    }
+    .download-btn {
+      margin-top: 10px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>🧾 Payment Receipt Form</h2>
+  <form id="paymentForm">
+    <input type="text" id="name" placeholder="Full Name" required />
+    <input type="text" id="number" placeholder="Mobile Number" required />
+    <input type="text" id="amount" placeholder="Amount (BDT)" required />
+    <button type="submit">Submit</button>
+  </form>
+
+  <div class="receipt" id="receipt">
+    <h3>✅ Payment Receipt</h3>
+    <p><strong>Name:</strong> <span id="rName"></span></p>
+    <p><strong>Number:</strong> <span id="rNumber"></span></p>
+    <p><strong>Amount:</strong> <span id="rAmount"></span> BDT</p>
+    <p><strong>Date:</strong> <span id="rDate"></span></p>
+    <button class="download-btn" onclick="downloadReceipt()">Download Receipt</button>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    // ✅ Firebase Config (আপনারটি এখানে বসান)
+    const firebaseConfig = {
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
+    };
+
+    // 🔗 Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const form = document.getElementById('paymentForm');
+    const receipt = document.getElementById('receipt');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const number = document.getElementById('number').value;
+      const amount = document.getElementById('amount').value;
+      const date = new Date().toLocaleString();
+
+      // 📝 Save to Firebase
+      const newRef = database.ref('payments').push();
+      newRef.set({ name, number, amount, date });
+
+      // 🎟️ Show Receipt
+      document.getElementById('rName').innerText = name;
+      document.getElementById('rNumber').innerText = number;
+      document.getElementById('rAmount').innerText = amount;
+      document.getElementById('rDate').innerText = date;
+      receipt.style.display = 'block';
+
+      form.reset();
+    });
+
+    // 📥 Download Receipt as Image
+    function downloadReceipt() {
+      html2canvas(document.querySelector("#receipt")).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "payment_receipt.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    }
+  </script>
+
+  <!-- 📸 HTML2Canvas for image download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>  
+
+here is my code.. can i update this code. 
