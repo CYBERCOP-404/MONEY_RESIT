@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -146,28 +147,28 @@
     <label></label>
     <input type="text" id="number" placeholder="মোবাইল নম্বর" required />
 
-    <label>পূর্বের বাকি (BDT)</label>
-    <input type="number" id="previousDue" placeholder="পূর্বের বাকি (ঐচ্ছিক)" value="0" min="0" />
+    <label></label>
+    <input type="number" id="previousDue" placeholder="পূর্বের বাকি" value="" min="0" />
 
     <div class="products" id="productsList">
       <label></label>
       <div class="product-row">
         <input type="text" placeholder="পণ্যের নাম" class="product-name" />
         <input type="number" min="1" value="1" class="product-qty" placeholder="পরিমাণ" />
-        <input type="number" min="0" step="0.01" value="0" class="product-price" placeholder="প্রতি এককের দাম (BDT)" />
-        <button type="button" class="remove-btn" title="পণ্য মুছে ফেলুন">×</button>
+        <input type="number" min="0" step="0.01" value="0" class="product-price" placeholder="প্রতি এককের দাম " />
+        <button type="button" class="remove-btn" title="পণ্য মুছে ফেলুন">X</button>
       </div>
     </div>
 
-    <button type="button" class="add-product-btn" id="addProductBtn">নতুন পণ্য যোগ করুন +</button>
+    <button type="button" class="add-product-btn" id="addProductBtn">নতুন পণ্য যোগ করুন</button>
 
-    <label>মোট মূল্য (BDT)</label>
+    <label>মোট মূল্য </label>
     <input type="text" id="total" readonly style="background:#ddd;" />
 
-    <label>জমা টাকা (BDT)</label>
+    <label>জমা টাকা </label>
     <input type="number" id="paid" placeholder="জমা টাকা" required min="0" />
 
-    <label>বর্তমান বাকি (BDT)</label>
+    <label>বর্তমান বাকি </label>
     <input type="text" id="currentDue" readonly style="background:#eee; font-weight: bold;" />
 
     <button type="submit">সাবমিট করুন</button><br><br>
@@ -190,23 +191,23 @@
         <tr>
           <th>পণ্যের নাম</th>
           <th>পরিমাণ</th>
-          <th>প্রতি এককের দাম (BDT)</th>
-          <th>মোট (BDT)</th>
+          <th>প্রতি এককের দাম </th>
+          <th>মোট </th>
         </tr>
       </thead>
       <tbody id="rProductsTableBody"></tbody>
       <tfoot>
         <tr>
-          <th colspan="3" style="text-align:left;">সর্বমোট</th>
-          <th id="rTotal"></th>
+          <th colspan="3" style="text-align:left; ">সর্বমোট</th>
+          <th style="color: blue;" id="rTotal"></th>
         </tr>
         <tr>
           <th colspan="3" style="text-align:left;">জমা</th>
-          <th id="rPaid"></th>
+          <th style="color: rgb(20, 255, 3);" id="rPaid"></th>
         </tr>
         <tr>
-          <th colspan="3" style="text-align:left;">বর্তমান বাকি</th>
-          <th id="rCurrentDue"></th>
+          <th colspan="3" style="text-align:left; ">বর্তমান বাকি</th>
+          <th style="color: rgb(255, 0, 0);" id="rCurrentDue"></th>
         </tr>
       </tfoot>
     </table>
@@ -239,7 +240,7 @@
       div.innerHTML = `
         <input type="text" placeholder="পণ্যের নাম" class="product-name" />
         <input type="number" min="1" value="1" class="product-qty" placeholder="পরিমাণ" />
-        <input type="number" min="0" step="0.01" value="0" class="product-price" placeholder="প্রতি এককের দাম (BDT)" />
+        <input type="number" min="0" step="0.01" value="0" class="product-price" placeholder="প্রতি এককের দাম " />
         <button type="button" class="remove-btn" title="পণ্য মুছে ফেলুন">×</button>
       `;
       productsList.appendChild(div);
